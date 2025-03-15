@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>채팅방 목록</title>
+	<style>
+      .chat-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+      .chat-list {
+        border: 1px solid #e1e1e1;
+        border-radius: 4px;
+      }
+      .chat-item {
+        display: flex;
+        padding: 15px;
+        border-bottom: 1px solid #e1e1e1;
+        cursor: pointer;
+      }
+      .chat-item:hover {
+        background-color: #f8f9fa;
+      }
+      .chat-info {
+        flex: 1;
+      }
+      .chat-name {
+        font-size: 16px;
+        font-weight: bold;
+        margin-bottom: 5px;
+      }
+      .create-room {
+        margin-bottom: 20px;
+      }
+      .create-room input {
+        padding: 8px;
+        margin-right: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+      }
+      .create-room button {
+        padding: 8px 15px;
+        background-color: #00c7ae;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+	</style>
+</head>
+<body>
+<div class="chat-container">
+	<form class="create-room" method="post" action="/api/chat/room">
+		<input type="text" name="name" placeholder="채팅방 이름을 입력하세요" required>
+		<button type="submit">채팅방 생성</button>
+	</form>
+
+	<div class="chat-list">
+		<div th:each="room : ${rooms}" class="chat-item"
+		     th:onclick="'location.href=\'/view/chat/room/' + ${room.id} + '\''">
+			<div class="chat-info">
+				<div class="chat-name" th:text="${room.name}"></div>
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+</html>
