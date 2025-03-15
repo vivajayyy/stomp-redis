@@ -27,24 +27,19 @@ public class ChatController {
 
     @MessageMapping("/chat/message")
     public void sendMessage(ChatMessageDto message) {
-        if (message.getType() == ChatMessageDto.MessageType.ENTER) {
-            message = ChatMessageDto.builder()
-                .type(message.getType())
-                .roomId(message.getRoomId())
-                .sender(message.getSender())
-                .content(message.getSender() + "님이 입장하셨습니다.")
-                .build();
-        }
-
-        // MongoDB에 메시지 저장
         ChatMessage chatMessage = ChatMessage.builder()
+            .type(ChatMessage.MessageType.valueOf(message.getType().name()))
             .roomId(message.getRoomId())
             .sender(message.getSender())
-            .content(message.getContent())
+            .content(message.getType() == ChatMessageDto.MessageType.ENTER ?
+                message.getSender() + "님이 입장하셨습니다." :
+                message.getContent())
             .build();
-        chatMessageRepository.save(chatMessage);
 
-        // 클라이언트에게 메시지 발송
-        sendingOperations.convertAndSend("/sub/chat/room/" + message.getRoomId(), message);
+        // MongoDB에 저장
+        ChatMessage savedMessage = chatMessageRepository.save(chatMessage);
+
+        // 클라이언트에게 발송
+        sendingOperations.convertAndSend("/sub/chat/room/" + message.getRoomId(), savedMessage);
     }
 }

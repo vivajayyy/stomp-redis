@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 @Document(collection = "chat_messages")
 @NoArgsConstructor
 public class ChatMessage {
-
     public enum MessageType {
         ENTER, TALK
     }
@@ -21,11 +20,9 @@ public class ChatMessage {
     @Id
     private String id;
     private MessageType type;
-    @Field("room_id")
     private Long roomId;
     private String sender;
     private String content;
-    @Field("created_at")
     private LocalDateTime createdAt;
 
     @Builder
